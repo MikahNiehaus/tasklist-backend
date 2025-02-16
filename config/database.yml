@@ -1,0 +1,14 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  url: <%= ENV['DATABASE_PUBLIC_URL'] %>
+
+development:
+  <<: *default
+  database: tasklist_development
+
+production:
+  <<: *default
+  database: tasklist_production

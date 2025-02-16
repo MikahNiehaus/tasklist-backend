@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Uses the password from .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - tasklist_db_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && rails db:create db:migrate && rails s -b '0.0.0.0'"
+    volumes:
+      - ".:/tasklist-backend"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: ${DATABASE_PUBLIC_URL}  # Uses the database URL from .env
+
+volumes:
+  tasklist_db_data:
