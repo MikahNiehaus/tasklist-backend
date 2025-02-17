@@ -1,6 +1,6 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins '*'  # Allow requests from anywhere (or specify your frontend URL)
+      origins 'https://tasklist-frontend.pages.dev'  # ✅ Use your actual frontend domain
       resource '*', 
         headers: :any, 
         methods: [:get, :post, :patch, :put, :delete, :options]
