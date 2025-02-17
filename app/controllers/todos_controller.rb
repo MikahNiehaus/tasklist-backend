@@ -3,8 +3,10 @@ class TodosController < ApplicationController
   
     # GET /todos
     def index
-      if params[:status].present?
-        @todos = Todo.where(status: params[:status])
+      if params[:filter] == 'pending'
+        @todos = Todo.where(completed: false)
+      elsif params[:filter] == 'completed'
+        @todos = Todo.where(completed: true)
       else
         @todos = Todo.all
       end
@@ -43,7 +45,7 @@ class TodosController < ApplicationController
   
     # PATCH /todos/:id/complete
     def complete
-      @todo.update(status: 'complete')
+      @todo.update(completed: true)
       render json: @todo
     end
   
@@ -54,7 +56,7 @@ class TodosController < ApplicationController
     end
   
     def todo_params
-      params.require(:todo).permit(:title, :description, :status)
+      params.require(:todo).permit(:title, :description, :completed)
     end
   end
   
