@@ -3,12 +3,7 @@ default: &default
   encoding: unicode
   pool: 5
   timeout: 5000
-  url: <%= ENV['DATABASE_PUBLIC_URL'] %>
-
-development:
-  <<: *default
-  database: tasklist_development
+  url: <%= ENV['DATABASE_URL'] %>  # ✅ Ensure DATABASE_URL is used
 
 production:
   <<: *default
-  database: tasklist_production
