@@ -3,18 +3,12 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
-  url: <%= ENV['DATABASE_URL'] %>
-  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
-  database: <%= ENV['PGDATABASE'] %>
-  host: <%= ENV['PGHOST'] %>
-  username: postgres
-  password: <%= ENV['PGPASSWORD'] %>
-  port: <%= ENV['PGPORT'] %>
+  url: <%= ENV['DATABASE_URL'] %>  # ✅ Always use DATABASE_URL
 
-production: 
+production:
   <<: *default
 
-development: 
+development:
   <<: *default
 
 test:
