@@ -57,16 +57,16 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
 
-  # ✅ Allow all hosts (prevents "Blocked Hosts" errors)
-  config.hosts.clear
-
-  # ✅ Allow CORS requests from any origin (important for APIs)
   config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins '*'  # Allows requests from any domain (⚠ Be careful in production)
-      resource '*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
+      origins 'https://tasklist-frontend.pages.dev' # ✅ Only allow this frontend domain
+      resource '*', 
+        headers: :any, 
+        methods: [:get, :post, :patch, :put, :delete, :options],
+        credentials: true  # ✅ Allow cookies & authentication (if needed)
     end
   end
+  
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
