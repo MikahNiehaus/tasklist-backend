@@ -4,21 +4,25 @@ production:
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
   url: <%= ENV['DATABASE_URL'] %>  # ✅ Always use DATABASE_URL
+  secret_key_base: "dummy_secret_key"
 cable:
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
   url: <%= ENV['DATABASE_URL'] %>  # ✅ Always use DATABASE_URL
+  secret_key_base: "dummy_secret_key"
 queue:
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
   url: <%= ENV['DATABASE_URL'] %>  # ✅ Always use DATABASE_URL
+  secret_key_base: "dummy_secret_key"
 cache:
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
   url: <%= ENV['DATABASE_URL'] %>  # ✅ Always use DATABASE_URL
+  secret_key_base: "dummy_secret_key"
