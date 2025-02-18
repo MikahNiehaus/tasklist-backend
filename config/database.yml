@@ -16,3 +16,5 @@ production:
 
 queue:
   <<: *default
+cable:
+ <<: *default
