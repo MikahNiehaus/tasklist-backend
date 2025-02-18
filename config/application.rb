@@ -9,7 +9,7 @@ module TasklistBackend
   class Application < Rails::Application
     # Initialize configuration defaults for the originally generated Rails version.
     config.load_defaults 8.0
-
+    config.secret_key_base = "dummy_secret_key" if Rails.env.production?
     # Ignore `lib/assets`, `lib/tasks`, or anything that doesn't contain `.rb` files
     config.autoload_lib(ignore: %w[assets tasks])
 
