@@ -3,18 +3,53 @@ default: &default
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000
-  url: <%= ENV['DATABASE_URL'] %>  # ✅ Ensure DATABASE_URL is always used
+  url: <%= ENV['DATABASE_URL'] %>
+  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
 
 development:
   <<: *default
+  database: <%= ENV['PGDATABASE'] %>
+  host: <%= ENV['PGHOST'] %>
+  username: postgres
+  password: <%= ENV['PGPASSWORD'] %>
+  port: <%= ENV['PGPORT'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
 
 test:
   <<: *default
+  database: <%= ENV['PGDATABASE'] %>
+  host: <%= ENV['PGHOST'] %>
+  username: postgres
+  password: <%= ENV['PGPASSWORD'] %>
+  port: <%= ENV['PGPORT'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
 
 production:
   <<: *default
+  database: <%= ENV['PGDATABASE'] %>
+  host: <%= ENV['PGHOST'] %>
+  username: postgres
+  password: <%= ENV['PGPASSWORD'] %>
+  port: <%= ENV['PGPORT'] %>
+  url: <%= ENV['DATABASE_URL'] %>
+  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
 
 queue:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
+  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
+
 cable:
- <<: *default
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
+  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
+
+cache:
+  <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
+  public_url: <%= ENV['DATABASE_PUBLIC_URL'] %>
+
+RAILS_ENV: <%= ENV['RAILS_ENV'] %>
+PORT: <%= ENV['PORT'] %>
