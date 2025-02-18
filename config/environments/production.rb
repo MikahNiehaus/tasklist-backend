@@ -56,7 +56,17 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
+
+  # ✅ Allow all hosts (prevents "Blocked Hosts" errors)
   config.hosts.clear
+
+  # ✅ Allow CORS requests from any origin (important for APIs)
+  config.middleware.insert_before 0, Rack::Cors do
+    allow do
+      origins '*'  # Allows requests from any domain (⚠ Be careful in production)
+      resource '*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
+    end
+  end
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
@@ -76,14 +86,7 @@ Rails.application.configure do
 
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
-  config.hosts.clear
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
