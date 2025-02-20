@@ -14,4 +14,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_16_215624) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
+  create_table "todos", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.boolean "completed", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 end
