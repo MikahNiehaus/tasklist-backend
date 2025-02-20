@@ -59,15 +59,17 @@ Rails.application.configure do
 
   config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins 'https://tasklist-frontend.pages.dev' # ✅ Only allow this frontend domain
-      resource '*', 
-        headers: :any, 
+      origins 'https://tasklist-frontend.pages.dev', 
+              'http://localhost:3000', 
+              'http://127.0.0.1:3000'  # ✅ Allow both localhost and 127.0.0.1
+  
+      resource '*',
+        headers: :any,
         methods: [:get, :post, :patch, :put, :delete, :options],
         credentials: true  # ✅ Allow cookies & authentication (if needed)
     end
   end
   
-
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {
   #   user_name: Rails.application.credentials.dig(:smtp, :user_name),

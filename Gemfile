@@ -8,6 +8,12 @@ gem 'dotenv-rails', groups: [:development, :test]
 #gem "tzinfo-data", platforms: %i[ jruby ]
 gem 'tzinfo-data'
 
+#for tests
+  gem 'rspec-rails'         # RSpec for testing
+  gem 'factory_bot_rails'   # FactoryBot for test data
+  gem 'faker'               # Faker for random test data
+  gem 'database_cleaner'    # Ensures clean test database state
+
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.1"
