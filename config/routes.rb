@@ -1,14 +1,7 @@
 Rails.application.routes.draw do
-  resources :todos do
-    collection do
-      get 'pending'
-      get 'completed'
-      get 'all'
-    end
-    member do
-      patch 'complete'  # ✅ Add this to enable /todos/:id/complete
+  resources :rooms, only: [:create, :show], param: :room_code do
+    resources :todos, only: [:index, :create, :update, :destroy], param: :id do
+      patch :complete, on: :member # Mark a todo as complete
     end
   end
-
-  root 'todos#index'
 end
