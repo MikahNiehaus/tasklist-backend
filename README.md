@@ -71,7 +71,7 @@ curl -X POST "http://localhost:3001/todos" \
 rails test
 ------------------------
 
- ✅ Run RSpec Tests
+ ✅ Run RSpec Tests not yet updated with new version
 ------------------------
 bundle exec rspec
 ------------------------

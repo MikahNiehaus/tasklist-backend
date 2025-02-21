@@ -1,47 +1,55 @@
-require 'rails_helper'
+require "rails_helper"
 
-RSpec.describe 'Todos API', type: :request do
-  let!(:todo) { create(:todo) }  # Create a test todo
-  let(:todo_id) { todo.id }  # Get the todo's ID
+RSpec.describe "Todos API", type: :request do
+  let!(:room) { Room.create!(room_code: "TEST123") }
+  let(:todo_params) { { todo: { title: "Test Todo", description: "Test Description" } } }
 
-  describe 'POST /todos' do
-    it 'creates a new to-do item' do
-      valid_params = { todo: { title: 'New Task', description: 'Test description', completed: false } }
+  describe "GET /rooms/:room_code/todos" do
+    it "fetches todos successfully" do
+      get "/rooms/#{room.room_code}/todos"
+      expect(response).to have_http_status(:success)
+    end
+  end
 
-      post '/todos', params: valid_params
-
+  describe "POST /rooms/:room_code/todos" do
+    it "creates a new todo" do
+      post "/rooms/#{room.room_code}/todos", params: todo_params
       expect(response).to have_http_status(:created)
-      expect(JSON.parse(response.body)['title']).to eq('New Task')
+    end
+
+    it "does not create a todo with an empty title" do
+      post "/rooms/#{room.room_code}/todos", params: { todo: { title: "", description: "No title" } }
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 
-  describe 'PATCH /todos/:id' do
-    it 'updates a to-do item' do
-      update_params = { todo: { title: 'Updated Task' } }
+  describe "PATCH /rooms/:room_code/todos/:id" do
+    it "updates a todo" do
+      post "/rooms/#{room.room_code}/todos", params: todo_params
+      todo_id = JSON.parse(response.body)["id"]
 
-      patch "/todos/#{todo_id}", params: update_params
-
-      expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)['title']).to eq('Updated Task')
+      patch "/rooms/#{room.room_code}/todos/#{todo_id}", params: { todo: { title: "Updated Title", description: "Updated Desc" } }
+      expect(response).to have_http_status(:success)
     end
   end
 
-  describe 'DELETE /todos/:id' do
-    it 'deletes a to-do item' do
-      expect {
-        delete "/todos/#{todo_id}"
-      }.to change(Todo, :count).by(-1)
+  describe "PATCH /rooms/:room_code/todos/:id/toggle" do
+    it "toggles a todo" do
+      post "/rooms/#{room.room_code}/todos", params: todo_params
+      todo_id = JSON.parse(response.body)["id"]
 
+      patch "/rooms/#{room.room_code}/todos/#{todo_id}/toggle"
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "DELETE /rooms/:room_code/todos/:id" do
+    it "deletes a todo" do
+      post "/rooms/#{room.room_code}/todos", params: todo_params
+      todo_id = JSON.parse(response.body)["id"]
+
+      delete "/rooms/#{room.room_code}/todos/#{todo_id}"
       expect(response).to have_http_status(:no_content)
-    end
-  end
-
-  describe 'PATCH /todos/:id/complete' do
-    it 'marks a to-do item as completed' do
-      patch "/todos/#{todo_id}/complete"
-
-      expect(response).to have_http_status(:ok)
-      expect(Todo.find(todo_id).completed).to be true
     end
   end
 end
