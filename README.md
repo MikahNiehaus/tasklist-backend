@@ -66,12 +66,12 @@ curl -X POST "http://localhost:3001/todos" \
 
  🛠 Running Tests
 
- ✅ Run Unit & Integration Tests
+ ✅ Run Tests not yet updated with new version
 ------------------------
-rails test
+rails test test/controllers/todos_controller_test.rb
 ------------------------
 
- ✅ Run RSpec Tests not yet updated with new version
+ ✅ Run RSpec Tests 
 ------------------------
 bundle exec rspec
 ------------------------

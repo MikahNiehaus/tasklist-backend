@@ -65,3 +65,7 @@ group :development, :test do
 end
 
 
+
+gem "database_cleaner-active_record", "~> 2.2"
+
+gem "mocha", "~> 2.7"
