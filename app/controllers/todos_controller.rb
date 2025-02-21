@@ -62,14 +62,14 @@ def update
     Rails.logger.info "📝 Permitted Params: #{todo_params.inspect}"
 
    # ✅ Extract title & description correctly, even if they are nested
-extracted_title = nil
-extracted_description = nil
+ extracted_title = nil
+ extracted_description = nil
 
-if todo_params[:title].is_a?(ActionController::Parameters) # If title is nested
+ if todo_params[:title].is_a?(ActionController::Parameters) # If title is nested
   Rails.logger.warn "⚠️ Title is nested inside another object! Extracting..."
   extracted_title = todo_params[:title][:title].to_s.strip
   extracted_description = todo_params[:title][:description].to_s.strip
-else
+ else
   extracted_title = todo_params[:title].to_s.strip
   extracted_description = todo_params[:description].to_s.strip
 end
@@ -143,32 +143,51 @@ end
     end
   end
 
-  # ✅ PATCH /rooms/:room_code/todos/:id/complete (Complete Todo)
-# ✅ PATCH /rooms/:room_code/todos/:id/complete (Mark Todo as Complete)
-def complete
-  Rails.logger.info "✅ Marking todo ID #{params[:id]} as completed in \"#{@table_name}\""
+# ✅ PATCH /rooms/:room_code/todos/:id/toggle
+def toggle
+  Rails.logger.info "🔄 Toggling todo ID #{params[:id]} in \"#{@table_name}\""
 
   begin
-    sql = <<-SQL
+    # ✅ Ensure ID is valid
+    todo_id = params[:id].to_s.strip
+
+    if todo_id.empty?
+      Rails.logger.error "❌ ERROR: Todo ID is missing!"
+      render json: { error: "Todo ID is required" }, status: :unprocessable_entity
+      return
+    end
+
+    # ✅ Fetch current todo data
+    fetch_sql = "SELECT completed FROM \"#{@table_name}\" WHERE id = #{todo_id}"
+    result = ActiveRecord::Base.connection.exec_query(fetch_sql)
+    current_todo = result.to_a.first
+
+    if current_todo.nil?
+      Rails.logger.error "❌ ERROR: Todo with ID #{todo_id} not found!"
+      render json: { error: "Todo not found" }, status: :not_found
+      return
+    end
+
+    # ✅ Toggle the completed status
+    new_status = !current_todo["completed"]
+    Rails.logger.info "✅ Current Status: #{current_todo["completed"]} | Toggling to: #{new_status}"
+
+    update_sql = <<-SQL
       UPDATE "#{@table_name}"
-      SET completed = TRUE, updated_at = NOW()
-      WHERE id = #{params[:id]}
+      SET completed = #{new_status}, updated_at = NOW()
+      WHERE id = #{todo_id}
       RETURNING id, title, description, completed, created_at, updated_at
     SQL
 
-    result = ActiveRecord::Base.connection.exec_query(sql)
-    completed_todo = result.to_a.first
+    update_result = ActiveRecord::Base.connection.exec_query(update_sql)
+    toggled_todo = update_result.to_a.first
 
-    if completed_todo
-      Rails.logger.info "✅ Todo Marked Complete: #{completed_todo.inspect}"
-      render json: completed_todo
-    else
-      Rails.logger.warn "⚠️ Todo ID #{params[:id]} not found in \"#{@table_name}\""
-      render json: { error: "Todo not found" }, status: :not_found
-    end
+    Rails.logger.info "✅ Todo Toggled Successfully: #{toggled_todo.inspect}"
+
+    render json: toggled_todo
   rescue => e
-    Rails.logger.error "❌ Error marking todo complete: #{e.message}"
-    render json: { error: "Error marking todo complete" }, status: :internal_server_error
+    Rails.logger.error "❌ Error toggling todo: #{e.message}"
+    render json: { error: "Error toggling todo: #{e.message}" }, status: :internal_server_error
   end
 end
 
